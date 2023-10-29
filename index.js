@@ -2,10 +2,10 @@ const songs = require("./songs.json")
 const fs = require('fs')
 
 const result = []
-let formatResultSQL = ""
+let formatResultSQLSongs = ""
 
 for(let i = 0; i< songs.length; i++){
-  const name = songs[i].track_name, album = songs[i].album_name, 
+  let name = songs[i].track_name, album = songs[i].album_name, 
         album_img = songs[i].album_img, artist = songs[i].artist_name,
         artist_img = songs[i].artist_img, time = Number(songs[i].duration),
         release_date = songs[i].release_date
@@ -27,31 +27,31 @@ for(let i = 0; i< songs.length; i++){
   const min = Math.floor(secondsTot/60)
   const seconds = secondsTot%60
       
-  const secondsStr = seconds.toString()
+  let secondsStr = seconds.toString()
   if(secondsStr.length<2)
       secondsStr = "0"+secondsStr
   const formattedTime = `${min}:${secondsStr}`
 
   result.push({name: name, artist: artist, album: album, time: formattedTime,
               is_favorite: Math.random() < 0.5, album_img: album_img,
-              artist_img: artist_img })
+              artist_img: artist_img, release_date: release_date })
 
   if(i!==songs.length-1){
-      formatResultSQL += `('${result[i].name}', '${result[i].artist}',`+
+      formatResultSQLSongs += `('${result[i].name}', '${result[i].artist}',`+
                          ` '${result[i].album}', '${result[i].time}',`+
                          ` ${result[i].is_favorite}, '${result[i].album_img}',`+
-                         ` '${result[i].artist_img}'),\n`
+                         ` '${result[i].artist_img}', '${result[i].release_date}'),\n`
   }
   else{
-    formatResultSQL += `('${result[i].name}', '${result[i].artist}',`+
+    formatResultSQLSongs += `('${result[i].name}', '${result[i].artist}',`+
                        ` '${result[i].album}', '${result[i].time}',`+
                        ` ${result[i].is_favorite}, '${result[i].album_img}',`+
-                       ` '${result[i].artist_img}');`
+                       ` '${result[i].artist_img}', '${result[i].release_date}');`
   }
 
 }
 
-fs.writeFile('Output.txt', formatResultSQL, (err) => { 
+fs.writeFile('OutputSQLSongs.txt', formatResultSQLSongs, (err) => { 
     if (err) throw err
 }) 
 
