@@ -2,13 +2,11 @@ const songs = require("./songs.json")
 const fs = require('fs')
 
 const artistIndex = []
-for(let i = 0; i< songs.length;i++){
-  if(artistIndex.indexOf(songs[i].artist_name!==-1))
-      artistIndex.push(songs[i].artist_name)
-}
-
+let indexArtist = 0
+const resultArtist = []
 const result = []
 let formatResultSQLSongs = ""
+let formatResultSQLArtists = ""
 
 for(let i = 0; i< songs.length; i++){
   let name = songs[i].track_name, 
@@ -22,8 +20,7 @@ for(let i = 0; i< songs.length; i++){
         artist = songs[i].artist_name,
         artist_img = songs[i].artist_img, 
         time = Number(songs[i].duration),
-        release_date = songs[i].release_date,
-        artist_index = artistIndex.indexOf(songs[i].artist_name)+1
+        release_date = songs[i].release_date
 
   if(typeof name==="string")
     name = name.replace(/['`’]/g, "''")
@@ -57,6 +54,13 @@ for(let i = 0; i< songs.length; i++){
       secondsStr = "0"+secondsStr
   const formattedTime = `${min}:${secondsStr}`
 
+  if(artistIndex.indexOf(artist)===-1){
+    artistIndex.push(artist)
+    resultArtist.push({artist, artist_img})
+    formatResultSQLArtists += `('${resultArtist[indexArtist].artist}', '${resultArtist[indexArtist].artist_img}'),\n`
+    indexArtist++
+  }
+  const artist_index = artistIndex.indexOf(artist)+1
   result.push({artist_id: artist_index, name: name, artist: artist, album: album, time: formattedTime,
               is_favorite: Math.random() < 0.5, album_img: album_img,
               artist_img: artist_img, release_date: release_date })
@@ -78,6 +82,10 @@ for(let i = 0; i< songs.length; i++){
 
 fs.writeFile('OutputSQLSongs.txt', formatResultSQLSongs, (err) => { 
     if (err) throw err
+}) 
+
+fs.writeFile('OutputSQLArtists.txt', formatResultSQLArtists, (err) => { 
+  if (err) throw err
 }) 
 
 
