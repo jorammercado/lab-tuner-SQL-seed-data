@@ -1,14 +1,29 @@
 const songs = require("./songs.json")
 const fs = require('fs')
 
+const artistIndex = []
+for(let i = 0; i< songs.length;i++){
+  if(artistIndex.indexOf(songs[i].artist_name!==-1))
+      artistIndex.push(songs[i].artist_name)
+}
+
 const result = []
 let formatResultSQLSongs = ""
 
 for(let i = 0; i< songs.length; i++){
-  let name = songs[i].track_name, album = songs[i].album_name, 
-        album_img = songs[i].album_img, artist = songs[i].artist_name,
-        artist_img = songs[i].artist_img, time = Number(songs[i].duration),
-        release_date = songs[i].release_date
+  let name = songs[i].track_name, 
+        album = songs[i].album_name, 
+        album_img = songs[i].album_img,
+        album_type = songs[i].album_type,
+        album_label = songs[i].album_label,
+        album_track_number = songs[i].album_track_number,
+        song_contributors = songs[i].artist_num,
+        explicit = songs[i].explicit,
+        artist = songs[i].artist_name,
+        artist_img = songs[i].artist_img, 
+        time = Number(songs[i].duration),
+        release_date = songs[i].release_date,
+        artist_index = artistIndex.indexOf(songs[i].artist_name)+1
 
   if(typeof name==="string")
     name = name.replace(/['`’]/g, "''")
@@ -22,6 +37,16 @@ for(let i = 0; i< songs.length; i++){
     artist_img = artist_img.replace(/['`’]/g, "''")
   if(typeof release_date==="string")
     release_date = release_date.replace(/['`’]/g, "''")
+  if(typeof name==="string")
+    album_type = album_type.replace(/['`’]/g, "''")
+  if(typeof name==="string")
+    album_label = album_label.replace(/['`’]/g, "''")
+  if(typeof name==="string")
+    album_track_number = album_track_number.replace(/['`’]/g, "''")
+  if(typeof name==="string")
+    song_contributors = song_contributors.replace(/['`’]/g, "''")
+  if(typeof name==="string")
+    explicit = explicit.replace(/['`’]/g, "''").toLowerCase()
     
   const secondsTot = Math.trunc(time/1000)
   const min = Math.floor(secondsTot/60)
@@ -32,18 +57,18 @@ for(let i = 0; i< songs.length; i++){
       secondsStr = "0"+secondsStr
   const formattedTime = `${min}:${secondsStr}`
 
-  result.push({name: name, artist: artist, album: album, time: formattedTime,
+  result.push({artist_id: artist_index, name: name, artist: artist, album: album, time: formattedTime,
               is_favorite: Math.random() < 0.5, album_img: album_img,
               artist_img: artist_img, release_date: release_date })
 
   if(i!==songs.length-1){
-      formatResultSQLSongs += `('${result[i].name}', '${result[i].artist}',`+
+      formatResultSQLSongs += `('${result[i].artist_id}', ` + `'${result[i].name}', '${result[i].artist}',`+
                          ` '${result[i].album}', '${result[i].time}',`+
                          ` ${result[i].is_favorite}, '${result[i].album_img}',`+
                          ` '${result[i].artist_img}', '${result[i].release_date}'),\n`
   }
   else{
-    formatResultSQLSongs += `('${result[i].name}', '${result[i].artist}',`+
+    formatResultSQLSongs += `('${result[i].artist_id}', ` + `'${result[i].name}', '${result[i].artist}',`+
                        ` '${result[i].album}', '${result[i].time}',`+
                        ` ${result[i].is_favorite}, '${result[i].album_img}',`+
                        ` '${result[i].artist_img}', '${result[i].release_date}');`
