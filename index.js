@@ -69,13 +69,13 @@ for(let i = 0; i< songs.length; i++){
       formatResultSQLSongs += `('${result[i].artist_id}', ` + `'${result[i].name}', '${result[i].artist}',`+
                          ` '${result[i].album}', '${result[i].time}',`+
                          ` ${result[i].is_favorite}, '${result[i].album_img}',`+
-                         ` '${result[i].artist_img}', '${result[i].release_date}'),\n`
+                         ` '${result[i].release_date}'),\n`
   }
   else{
     formatResultSQLSongs += `('${result[i].artist_id}', ` + `'${result[i].name}', '${result[i].artist}',`+
                        ` '${result[i].album}', '${result[i].time}',`+
                        ` ${result[i].is_favorite}, '${result[i].album_img}',`+
-                       ` '${result[i].artist_img}', '${result[i].release_date}');`
+                       ` '${result[i].release_date}');`
   }
 
 }
